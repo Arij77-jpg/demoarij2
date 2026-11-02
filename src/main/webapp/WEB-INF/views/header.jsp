@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jakarta Shop</title>
+    <title>Arij Shop</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/catalog.css">
 </head>
 <body>
@@ -13,8 +13,9 @@
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/catalog/products">Products</a>
         <a href="${pageContext.request.contextPath}/cart">
-            Cart <span class="count">${empty sessionScope.cart ? 0 : sessionScope.cart.size()}</span>
+            Cart <span class="count">${not empty cartService ? cartService.itemCount : (empty sessionScope.cart ? 0 : sessionScope.cart.size())}</span>
         </a>
+        <a href="${pageContext.request.contextPath}/hello" style="opacity: 0.8; font-size: 0.85rem;">Lab 1 (/hello)</a>
     </div>
 </nav>
 <main class="container">

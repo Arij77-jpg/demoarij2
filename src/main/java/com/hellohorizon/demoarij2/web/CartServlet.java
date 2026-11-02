@@ -1,39 +1,79 @@
 package com.hellohorizon.demoarij2.web;
 
-
-import com.hellohorizon.demoarij2.model.ProductCatalog;
 import com.hellohorizon.demoarij2.model.ProductDTO;
+import com.hellohorizon.demoarij2.service.CartService;
+import com.hellohorizon.demoarij2.service.ProductService;
+import com.hellohorizon.demoarij2.service.PromotionService;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * CartServlet - Lab 3 Step 4 refactor
+ *
+ * Injects CartService (@Stateful, @SessionScoped) and ProductService (@Stateless).
+ * The servlet no longer touches HttpSession directly; CartService handles state.
+ */
 @WebServlet({"/cart", "/cart/add", "/cart/remove"})
 public class CartServlet extends HttpServlet {
+
+    @Inject
+    private CartService cartService;
+
+    @Inject
+    private ProductService productService;
+
+    @Inject
+    private PromotionService promotionService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        req.setAttribute("cart", cartService.getItems());
+        req.setAttribute("subtotal", cartService.getTotal());
+        if (promotionService != null) {
+            req.setAttribute("discount", promotionService.calculateDiscountAmount());
+            req.setAttribute("discountedTotal", promotionService.calculateDiscountedTotal());
+        }
         req.getRequestDispatcher("/WEB-INF/views/cart.jsp").forward(req, resp);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cart");
-        if (cart == null) cart = new ArrayList<>();
+        String servletPath = req.getServletPath();
 
-        if ("/cart/remove".equals(req.getServletPath())) {
-            int index = Integer.parseInt(req.getParameter("index"));
-            if (index >= 0 && index < cart.size()) cart.remove(index);
+        if ("/cart/remove".equals(servletPath)) {
+            String indexParam = req.getParameter("index");
+            String productIdParam = req.getParameter("productId");
+            if (indexParam != null && !indexParam.isBlank()) {
+                try {
+                    int index = Integer.parseInt(indexParam);
+                    cartService.removeItemByIndex(index);
+                } catch (NumberFormatException ignored) {}
+            } else if (productIdParam != null && !productIdParam.isBlank()) {
+                try {
+                    Long productId = Long.valueOf(productIdParam);
+                    cartService.removeItem(productId);
+                } catch (NumberFormatException ignored) {}
+            }
         } else {
-            ProductDTO p = ProductCatalog.findById(Long.valueOf(req.getParameter("productId")));
-            if (p != null) cart.add(p);
+            String productIdParam = req.getParameter("productId");
+            if (productIdParam != null && !productIdParam.isBlank()) {
+                try {
+                    Long productId = Long.valueOf(productIdParam);
+                    ProductDTO product = productService.getProduct(productId);
+                    if (product != null) {
+                        cartService.addItem(product);
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
         }
-        session.setAttribute("cart", cart);
-        resp.sendRedirect(req.getContextPath() + "/cart"); // Post/Redirect/Get
+
+        resp.sendRedirect(req.getContextPath() + "/cart");
     }
 }

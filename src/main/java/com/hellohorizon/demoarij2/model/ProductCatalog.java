@@ -1,8 +1,5 @@
 package com.hellohorizon.demoarij2.model;
 
-
-
-
 import java.util.List;
 
 public class ProductCatalog {
@@ -15,9 +12,17 @@ public class ProductCatalog {
             new ProductDTO(6L, "Jakarta EE in Practice", "books", 39.90)
     );
 
-    public static List<ProductDTO> findAll() { return PRODUCTS; }
+    public static List<ProductDTO> findAll() {
+        return PRODUCTS;
+    }
 
     public static ProductDTO findById(Long id) {
-        return PRODUCTS.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
+        if (id == null) {
+            return null;
+        }
+        return PRODUCTS.stream()
+                .filter(p -> id.equals(p.getId()))
+                .findFirst()
+                .orElse(null);
     }
 }

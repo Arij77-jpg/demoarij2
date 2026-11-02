@@ -25,11 +25,21 @@
                     </form>
                 </div>
             </c:forEach>
-            <div class="cart-row total">
-                <span>Total</span>
-                <span class="price"><fmt:formatNumber value="${total}" type="currency" currencySymbol="$"/></span>
+            <div class="cart-row total" style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem;">
+                <span>Subtotal</span>
+                <span class="price"><fmt:formatNumber value="${subtotal != null ? subtotal : total}" type="currency" currencySymbol="$"/></span>
             </div>
-            <a class="btn" href="${pageContext.request.contextPath}/checkout">Go to checkout</a>
+            <c:if test="${not empty discount && discount > 0}">
+                <div class="cart-row" style="color: #16a34a; font-weight: 500;">
+                    <span>Promotion (10% off - PromotionService)</span>
+                    <span>- <fmt:formatNumber value="${discount}" type="currency" currencySymbol="$"/></span>
+                </div>
+                <div class="cart-row total" style="font-size: 1.2rem; font-weight: bold;">
+                    <span>Final Total</span>
+                    <span class="price"><fmt:formatNumber value="${discountedTotal}" type="currency" currencySymbol="$"/></span>
+                </div>
+            </c:if>
+            <a class="btn" style="margin-top: 1rem;" href="${pageContext.request.contextPath}/checkout">Go to checkout</a>
         </div>
     </c:otherwise>
 </c:choose>
