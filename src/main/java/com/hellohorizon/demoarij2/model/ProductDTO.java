@@ -9,6 +9,7 @@ public class ProductDTO implements Serializable {
     private String name;
     private String category;
     private double price;
+    private java.util.List<Review> reviews = new java.util.ArrayList<>();
 
     public ProductDTO() {}
 
@@ -30,4 +31,7 @@ public class ProductDTO implements Serializable {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public java.util.List<Review> getReviews() { return reviews; }
+    public void setReviews(java.util.List<Review> reviews) { this.reviews = reviews != null ? reviews : new java.util.ArrayList<>(); }
 }
