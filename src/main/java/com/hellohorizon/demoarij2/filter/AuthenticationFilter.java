@@ -6,7 +6,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-@WebFilter("/cart/*")
+@WebFilter(urlPatterns = {"/cart", "/cart/*"})
 public class AuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
