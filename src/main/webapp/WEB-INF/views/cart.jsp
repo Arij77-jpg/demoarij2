@@ -1,6 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
+<%--@elvariable id="cart" type="java.util.List<com.hellohorizon.demoarij2.model.ProductDTO>"--%>
+<%--@elvariable id="subtotal" type="java.lang.Double"--%>
+<%--@elvariable id="discount" type="java.lang.Double"--%>
+<%--@elvariable id="discountedTotal" type="java.lang.Double"--%>
 <jsp:include page="header.jsp" />
 
 <h2>Your cart</h2>

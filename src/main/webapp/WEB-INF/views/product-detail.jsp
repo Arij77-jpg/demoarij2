@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
+<%--@elvariable id="product" type="com.hellohorizon.demoarij2.model.ProductDTO"--%>
 <jsp:include page="header.jsp" />
 
 <a class="back" href="${pageContext.request.contextPath}/catalog/products">&larr; Back to products</a>
